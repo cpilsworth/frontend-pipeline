@@ -44,4 +44,7 @@ jobs:
           SOURCE_DIR: 'dist'
           DEST_DIR: "${{ env.DIRHASH }}"
       - name: Update HTML page item prefixPath
-        run: curl "$CONFIG_PATH" -H "Authorization: Bearer ${{ secrets.AEM_BEARER_TOKEN }}" --data-urlencode "prefixPath=$ASSET_HOST/${{ env.DIRHASH }}"
+        run: |
+          curl --url '$CONFIG_PATH' \ 
+          --header 'authorization: Bearer ${{ secrets.AEM_BEARER_TOKEN }}' \
+          --data-urlencode 'prefixPath=$ASSET_HOST/${{ env.DIRHASH }}''
