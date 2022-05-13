@@ -17,7 +17,7 @@ Resources:
                   ],
                 ]
         Enabled: "true"
-        Comment: Some comment
+        Comment: For AEM theme assets hosted on S3 referenced by sites
         DefaultCacheBehavior:
           AllowedMethods:
             - GET
