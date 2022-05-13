@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  myDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - Id: myS3Origin
+            DomainName: !GetAtt s3Bucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity:
+                !Join [
+                  "",
+                  [
+                    "origin-access-identity/cloudfront/",
+                    !Ref originAccessIdentity,
+                  ],
+                ]
+        Enabled: "true"
+        Comment: Some comment
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          Compress: true
+          # Managed-CachingOptimized
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          # CORS-S3Origin
+          OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf
+          # CORS-with-preflight-and-SecurityHeadersPolicy
+          ResponseHeadersPolicyId: eaab4381-ed33-4a86-88ca-d9558dc6cd63
+          TargetOriginId: myS3Origin
+          ViewerProtocolPolicy: redirect-to-https
+        PriceClass: PriceClass_All
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: "true"
+
+  s3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+    DeletionPolicy: Retain
+
+  originAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: "Identity used by cloudfront to access the S3 bucket"
+
+  webBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn: originAccessIdentity
+    Properties:
+      Bucket: !Ref s3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: !Join
+              - ""
+              - - !GetAtt s3Bucket.Arn
+                - "/*"
+            Principal:
+              CanonicalUser: !GetAtt originAccessIdentity.S3CanonicalUserId
