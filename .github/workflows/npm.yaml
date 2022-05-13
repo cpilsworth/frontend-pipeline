@@ -43,7 +43,7 @@ jobs:
 
       - name: Sync distribution to S3
         run: |
-          aws s3 sync dist/ icstyles/${{ env.DIRHASH }}
+          aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }}/icstyles/${{ env.DIRHASH }}
 
       - name: Update HTML page item prefixPath
         run: |
