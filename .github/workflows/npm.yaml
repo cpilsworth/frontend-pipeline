@@ -44,7 +44,7 @@ jobs:
           SOURCE_DIR: 'dist'
           DEST_DIR: "${{ env.DIRHASH }}"
 
-      - name: Echo curl CONFIG_PATH=${SITEHOST}/conf/${CONFIG_NAME}/sling:configs/com.adobe.cq.wcm.core.components.config.HtmlPageItemsConfig/jcr:contentrun: | 
+      - name: Echo curl
         run: |
           echo curl --url "${{ env.CONFIG_PATH }}" \
           --header 'authorization: Bearer ${{ secrets.AEM_BEARER_TOKEN }}' \
