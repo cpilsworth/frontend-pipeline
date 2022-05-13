@@ -39,6 +39,8 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::129191593519:role/administratorRole
           aws-region: us-east-1
+
+      - name: Sync distribution to S3
         run: |
           aws s3 sync dist/ icstyles/${{ env.DIRHASH }}
 
