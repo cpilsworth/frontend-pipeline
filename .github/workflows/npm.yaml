@@ -9,7 +9,8 @@ env:
   ASSET_HOST: https://d22jnhtfnuyr7y.cloudfront.net
   SITE_HOST: https://author-p31359-e533775.adobeaemcloud.com
   CONFIG_NAME: test-site
-  CONFIG_PATH: $SITE_HOST/conf/${CONFIG_NAME}/sling:configs/com.adobe.cq.wcm.core.components.config.HtmlPageItemsConfig/jcr:content
+  CONFIG_PATH: sling:configs/com.adobe.cq.wcm.core.components.config.HtmlPageItemsConfig/jcr:content
+  CONFIG_PATH: 
 
 
 jobs:
@@ -46,11 +47,11 @@ jobs:
 
       - name: Echo curl
         run: |
-          echo curl --url "${{ env.CONFIG_PATH }}" \
+          echo curl --url "$SITE_HOST/conf/$CONFIG_NAME/$CONFIG_PATH" \
           --header 'authorization: Bearer ${{ secrets.AEM_BEARER_TOKEN }}' \
-          --data-urlencode 'prefixPath=$ASSET_HOST/${{ env.DIRHASH }}''
+          --data-urlencode 'prefixPath=$ASSET_HOST/${{ env.DIRHASH }}'
       - name: Update HTML page item prefixPath        
         run: |
-          curl --url "${{ env.CONFIG_PATH }}" \ 
+          curl --url "$SITE_HOST/conf/$CONFIG_NAME/$CONFIG_PATH" \
           --header 'authorization: Bearer ${{ secrets.AEM_BEARER_TOKEN }}' \
-          --data-urlencode 'prefixPath=$ASSET_HOST/${{ env.DIRHASH }}''
+          --data-urlencode 'prefixPath=$ASSET_HOST/${{ env.DIRHASH }}'
