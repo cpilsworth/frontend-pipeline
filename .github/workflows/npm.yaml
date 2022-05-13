@@ -5,6 +5,13 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  ASSET_HOST: https://d22jnhtfnuyr7y.cloudfront.net
+  SITE_HOST: https://author-p31359-e533775.adobeaemcloud.com
+  CONFIG_NAME: test-site
+  CONFIG_PATH: $SITE_HOST/conf/${CONFIG_NAME}/sling:configs/com.adobe.cq.wcm.core.components.config.HtmlPageItemsConfig/jcr:content
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,7 +32,8 @@ jobs:
         run: echo "DIRHASH=$(tar -b20 -cf - ./dist | shasum | awk '{print $1}')" >> $GITHUB_ENV
       - name: Echo hash
         run: echo "${{ env.DIRHASH }}"
-      - uses: jakejarvis/s3-sync-action@master
+      - name: S3 Sync
+        uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
@@ -35,3 +43,5 @@ jobs:
           AWS_REGION: 'us-west-1'
           SOURCE_DIR: 'dist'
           DEST_DIR: "${{ env.DIRHASH }}"
+      - name: Update HTML page item prefixPath
+        run: curl "$CONFIG_PATH" -H "Authorization: Bearer $${{ secrets.AEM_BEARER_TOKEN }}" --data-urlencode "prefixPath=$ASSET_HOST/$DIRHASH"
