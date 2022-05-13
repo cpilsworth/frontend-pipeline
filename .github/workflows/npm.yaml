@@ -41,15 +41,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "us-west-1"
           SOURCE_DIR: "dist"
-          DEST_DIR: "${{ env.DIRHASH }}"
+          DEST_DIR: "icstyles/${{ env.DIRHASH }}"
 
-      - name: Echo curl
-        run: |
-          echo curl --url "$SITE_HOST/conf/$CONFIG_NAME/$CONFIG_PATH" \
-          --header "authorization: Bearer ${{ secrets.AEM_BEARER_TOKEN }}" \
-          --data-urlencode "prefixPath=$ASSET_HOST/${{ env.DIRHASH }}"
       - name: Update HTML page item prefixPath
         run: |
           curl --url "$SITE_HOST/conf/$CONFIG_NAME/$CONFIG_PATH" \
           --header "authorization: Bearer ${{ secrets.AEM_BEARER_TOKEN }}" \
-          --data-urlencode "prefixPath=$ASSET_HOST/${{ env.DIRHASH }}"
+          --data-urlencode "prefixPath=$ASSET_HOST/icstyles/${{ env.DIRHASH }}"
