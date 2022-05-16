@@ -31,9 +31,6 @@ jobs:
       - name: Calculate distribution hash
         run: echo "DIRHASH=$(tar -b20 -cf - ./dist | shasum | awk '{print $1}')" >> $GITHUB_ENV
 
-      - name: Echo hash
-        run: echo "${{ env.DIRHASH }}"
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
