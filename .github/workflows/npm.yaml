@@ -46,4 +46,5 @@ jobs:
         run: |
           curl --url "${{ env.SITE_HOST  }}/conf/${{ env.CONFIG_NAME }}/${{ env.CONFIG_PATH  }}" \
           --header "authorization: Bearer ${{ secrets.AEM_BEARER_TOKEN }}" \
-          --data-urlencode "prefixPath=${{ env.ASSET_HOST }}/icstyles/${{ env.DIRHASH }}"
+          --data-urlencode "prefixPath=${{ env.ASSET_HOST }}/icstyles/${{ env.DIRHASH }}" \
+          --verbose
